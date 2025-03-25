@@ -23,4 +23,23 @@ class ProductController {
             throw new FileUploadException('Apenas arquivos CSV são permitidos');
         }
     }
+
+    public function upload(): void {
+        try {
+            $this->validateUpload();
+            
+            $delimiter = $_POST['delimiter'] === ';' ? ';' : ',';
+            $this->csvProcessor = new CsvProcessor($delimiter);
+            
+            $products = $this->csvProcessor->csvProcess($_FILES['csv_file']['tmp_name']);
+            $response = $this->responseMapper->mapToResponse($products);
+            
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            
+        } catch (FileUploadException $e) {
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
 }
