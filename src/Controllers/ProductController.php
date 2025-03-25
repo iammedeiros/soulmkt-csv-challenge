@@ -14,7 +14,7 @@ class ProductController {
         $this->responseMapper = $responseMapper;
     }
     
-    private function validateUpload(): void {
+    private function validateUpload() {
         if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
             throw new FileUploadException('Erro no upload do arquivo');
         }
@@ -24,7 +24,7 @@ class ProductController {
         }
     }
 
-    public function upload(): void {
+    public function upload() {
         try {
             $this->validateUpload();
             
@@ -35,11 +35,11 @@ class ProductController {
             $response = $this->responseMapper->mapToResponse($products);
             
             header('Content-Type: application/json');
-            echo json_encode($response);
+            return json_encode($response);
             
         } catch (FileUploadException $e) {
             http_response_code(400);
-            echo json_encode(['error' => $e->getMessage()]);
+            return json_encode(['error' => $e->getMessage()]);
         }
     }
 }
