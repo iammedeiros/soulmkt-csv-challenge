@@ -5,7 +5,8 @@
     <title>Processador de Produtos</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/assets/js/script.js"></script>
+    <script src="/assets/js/product-table-renderer.js"></script>
+    <script src="/assets/js/app.js"></script>
 </head>
 <body>
     <div class="container">
