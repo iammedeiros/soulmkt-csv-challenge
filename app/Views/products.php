@@ -10,6 +10,8 @@
 <body>
     <div class="container">
         <h1>Upload de Planilha de Produtos</h1>
+
+        <div id="message-container"></div>
         
         <form id="upload-form">
             <div class="form-group">

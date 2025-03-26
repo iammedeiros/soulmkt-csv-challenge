@@ -7,19 +7,23 @@ class FileUploadException extends Exception
 {
     public const INVALID_FILE_TYPE = 1;
     public const UPLOAD_ERROR = 2;
-    public const FILE_NOT_FOUND = 3;
-    public const PROCESSING_ERROR = 4;
+    public const EMPTY_FILE = 3;
+    public const COLUMNS_NOT_FOUND = 4;
+    public const FILE_OPEN_ERROR = 5;
+    public const FILE_NOT_FOUND = 6;
     
     private const ERROR_MESSAGES = [
         self::INVALID_FILE_TYPE => 'Tipo de arquivo inválido. Apenas arquivos CSV são permitidos.',
         self::UPLOAD_ERROR => 'Erro durante o upload do arquivo. Por favor, tente novamente.',
-        self::FILE_NOT_FOUND => 'Arquivo não encontrado no servidor.',
-        self::PROCESSING_ERROR => 'Erro ao processar o arquivo.'
+        self::EMPTY_FILE => 'Não foi possível realizar o processamento. O arquivo CSV está vazio.',
+        self::COLUMNS_NOT_FOUND => 'As colunas obrigatórias (nome, codigo, preco) não foram encontradas no arquivo CSV.',
+        self::FILE_OPEN_ERROR => 'Não foi possível abrir o arquivo para leitura.',
+        self::FILE_NOT_FOUND => 'O arquivo especificado não foi encontrado no servidor.'
     ];
     
     public function __construct(int $code, ?string $customMessage = null)
     {
-        $message = $customMessage ?? self::ERROR_MESSAGES[$code] ?? 'Erro desconhecido no upload de arquivo';
+        $message = $customMessage ?? self::ERROR_MESSAGES[$code] ?? 'Erro desconhecido no upload do arquivo';
         parent::__construct($message, $code);
     }
 
@@ -33,17 +37,23 @@ class FileUploadException extends Exception
         return new self(self::UPLOAD_ERROR);
     }
 
+    public static function emptyFile(): self
+    {
+        return new self(self::EMPTY_FILE);
+    }
+    
+    public static function columnsNotFound(): self
+    {
+        return new self(self::COLUMNS_NOT_FOUND);
+    }
+    
+    public static function fileOpenError(): self
+    {
+        return new self(self::FILE_OPEN_ERROR);
+    }
+    
     public static function fileNotFound(): self
     {
         return new self(self::FILE_NOT_FOUND);
-    }
-    
-    public static function processingError(string $details = ''): self
-    {
-        $message = self::ERROR_MESSAGES[self::PROCESSING_ERROR];
-        if ($details) {
-            $message .= " Detalhes: $details";
-        }
-        return new self(self::PROCESSING_ERROR, $message);
     }
 }

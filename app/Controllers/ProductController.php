@@ -19,11 +19,12 @@ class ProductController
 
     private function validateUpload(): void
     {
+        $allowedTypes = ['text/csv', 'application/vnd.ms-excel'];
+
         if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
             throw FileUploadException::uploadError();
         }
 
-        $allowedTypes = ['text/csv', 'application/vnd.ms-excel'];
         if (!in_array($_FILES['csv_file']['type'], $allowedTypes)) {
             throw FileUploadException::invalidFileType();
         }

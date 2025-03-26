@@ -17,24 +17,32 @@ class CsvProcessor
     public function csvProcess(string $filePath): array
     {
         if (!file_exists($filePath)) {
-            throw new FileUploadException("Arquivo não encontrado");
+            throw FileUploadException::fileNotFound();
         }
 
         $products = [];
         $handle = fopen($filePath, "r");
 
-        if ($handle === FALSE) {
-            throw new FileUploadException("Não foi possível abrir o arquivo");
+        if (!$handle) {
+            throw FileUploadException::fileOpenError();
         }
 
         try {
             $headers = fgetcsv($handle, 0, $this->delimiter);
             $columnMap = $this->mapColumns($headers);
 
+            if (empty($columnMap)) {
+                throw FileUploadException::columnsNotFound();
+            }
+
             while (($data = fgetcsv($handle, 0, $this->delimiter)) !== FALSE) {
                 if ($product = $this->createProduct($data, $columnMap)) {
                     $products[] = $product;
                 }
+            }
+
+            if (empty($products)) {
+                throw FileUploadException::emptyFile();
             }
         } finally {
             fclose($handle);
@@ -50,9 +58,13 @@ class CsvProcessor
         $map = [];
         foreach ($headers as $index => $header) {
             $header = strtolower(trim($header));
-            if (in_array($header, ['nome', 'name'])) $map['name'] = $index;
-            elseif (in_array($header, ['codigo', 'code'])) $map['code'] = $index;
-            elseif (in_array($header, ['preco', 'price'])) $map['price'] = $index;
+
+            if (in_array($header, ['nome', 'name']))
+                $map['name'] = $index;
+            elseif (in_array($header, ['codigo', 'code']))
+                $map['code'] = $index;
+            elseif (in_array($header, ['preco', 'price']))
+                $map['price'] = $index;
         }
         return count($map) === 3 ? $map : [];
     }

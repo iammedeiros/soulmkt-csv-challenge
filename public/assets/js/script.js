@@ -45,7 +45,7 @@ class ProductTableRenderer {
         try {
             const product = JSON.parse( productData );
             navigator.clipboard.writeText( JSON.stringify( product, null, 2 ) )
-                .then( () => alert( 'Copiado para área de transferência!' ) )
+                .then( () => showMessage('Copiado para área de transferência!', 'success' ) )
                 .catch( err => console.error( 'Erro ao copiar:', err ) );
         } catch ( e ) {
             console.error( 'Erro ao parsear JSON:', e );
@@ -62,6 +62,21 @@ class ProductTableRenderer {
     }
 }
 
+const showMessage = function(message, type = 'error') {
+    const messageContainer = document.querySelector('#message-container');
+    
+    messageContainer.innerHTML = `
+        <div class="status-message ${type}-message">
+            ${message}
+        </div>
+    `;
+    
+    setTimeout(() => {
+        messageContainer.innerHTML = '';
+    }, 5000);
+}
+
+
 $( document ).ready( function () {
     $( '#upload-form' ).on( 'submit', function ( e ) {
         e.preventDefault();
@@ -76,11 +91,13 @@ $( document ).ready( function () {
             contentType: false,
             processData: false,
             success: function ( response ) {
+                console.log(response);
                 $( '#product-table-container' ).html( ProductTableRenderer.render( response ) );
                 ProductTableRenderer.initCopyButtons();
+                showMessage('Arquivo processado com sucesso!', 'success');
             },
-            error: function ( xhr ) {
-                alert( xhr.responseJSON?.error || 'Erro ao processar arquivo' );
+            error: function ( reject ) {
+                showMessage(JSON.parse(reject.responseText).error, 'error');
             }
         } );
     } );

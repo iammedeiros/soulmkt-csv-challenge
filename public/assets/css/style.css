@@ -74,11 +74,6 @@ h1 {
     display: flex;
     align-items: center;
     gap: 5px;
-    cursor: pointer;
-}
-
-.delimiter-options input[type="radio"] {
-    cursor: pointer;
 }
 
 .btn-submit {
