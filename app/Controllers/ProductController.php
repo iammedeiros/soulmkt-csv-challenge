@@ -42,15 +42,18 @@ class ProductController
             $response = $this->responseMapper->mapToResponse($products);
 
             header('Content-Type: application/json');
+
             echo json_encode($response);
         } catch (FileUploadException $e) {
             http_response_code(400);
+
             echo json_encode([
                 'error' => $e->getMessage(),
                 'code' => $e->getCode()
             ]);
         } catch (\Exception $e) {
             http_response_code(500);
+            
             echo json_encode([
                 'error' => 'Erro interno no servidor',
                 'details' => $e->getMessage()

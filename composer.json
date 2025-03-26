@@ -11,5 +11,7 @@
             "email": "iam_medeiros@yahoo.com.br"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    }
 }
