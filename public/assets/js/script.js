@@ -23,9 +23,13 @@ class ProductTableRenderer {
 
     static renderProductRow( product ) {
         const rowClass = product.hasNegativePrice ? 'negative-price' : '';
+        const productJSON = JSON.stringify( product );
+
         const actionButton = product.hasEvenNumberInCode
-            ? `<button onclick="ProductTableRenderer.copyToClipboard(${JSON.stringify( product )})">Copiar JSON</button>`
-            : '';
+            ? `<button class="copy-json-btn" data-product='${productJSON}'>
+                  Copiar JSON
+               </button>`
+            : '';    
 
         return `
             <tr class="${rowClass}">
@@ -38,9 +42,23 @@ class ProductTableRenderer {
     }
 
     static copyToClipboard( productData ) {
-        navigator.clipboard.writeText( JSON.stringify( productData, null, 2 ) )
-            .then( () => alert( 'Copiado para área de transferência!' ) )
-            .catch( err => console.error( 'Erro ao copiar:', err ) );
+        try {
+            const product = JSON.parse( productData );
+            navigator.clipboard.writeText( JSON.stringify( product, null, 2 ) )
+                .then( () => alert( 'Copiado para área de transferência!' ) )
+                .catch( err => console.error( 'Erro ao copiar:', err ) );
+        } catch ( e ) {
+            console.error( 'Erro ao parsear JSON:', e );
+        }
+    }
+
+    static initCopyButtons() {
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('copy-json-btn')) {
+                const productData = e.target.getAttribute('data-product');
+                ProductTableRenderer.copyToClipboard(productData);
+            }
+        });
     }
 }
 
@@ -58,8 +76,8 @@ $( document ).ready( function () {
             contentType: false,
             processData: false,
             success: function ( response ) {
-                console.log(response);
-                $( '#product-table-container' ).html(ProductTableRenderer.render( response ) );
+                $( '#product-table-container' ).html( ProductTableRenderer.render( response ) );
+                ProductTableRenderer.initCopyButtons();
             },
             error: function ( xhr ) {
                 alert( xhr.responseJSON?.error || 'Erro ao processar arquivo' );
