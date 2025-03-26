@@ -53,11 +53,14 @@ class ProductTableRenderer {
     }
 
     static initCopyButtons() {
-        document.addEventListener( 'click', ( e ) => {
-            if ( e.target.classList.contains( 'copy-json-btn' ) ) {
-                const productData = e.target.getAttribute( 'data-product' );
-                ProductTableRenderer.copyToClipboard( productData );
-            }
-        } );
+        document.removeEventListener('click', ProductTableRenderer.copyButtonHandler);
+        document.addEventListener('click', ProductTableRenderer.copyButtonHandler);
+    }
+    
+    static copyButtonHandler(e) {
+        if (e.target.classList.contains('copy-json-btn')) {
+            const productData = e.target.getAttribute('data-product');
+            ProductTableRenderer.copyToClipboard(productData);
+        }
     }
 }
