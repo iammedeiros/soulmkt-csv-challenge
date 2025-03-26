@@ -91,7 +91,7 @@ h1 {
     font-size: 16px;
     font-weight: 500;
     transition: background-color 0.3s;
-    width: 100%;
+    width: 200px;
 }
 
 .btn-submit:hover {
@@ -127,14 +127,14 @@ h1 {
 }
 
 .negative-price {
-    background-color: rgba(234, 67, 53, 0.1) !important;
+    background-color: rgba(222, 20, 20, 0.32) !important;
 }
 
 .negative-price:hover {
-    background-color: rgba(234, 67, 53, 0.15) !important;
+    background-color: rgba(234, 68, 53, 0.658) !important;
 }
 
-.btn-copy {
+.copy-json-btn {
     background-color: var(--success-color);
     color: white;
     border: none;
@@ -145,7 +145,7 @@ h1 {
     transition: all 0.3s;
 }
 
-.btn-copy:hover {
+.copy-json-btn:hover {
     background-color: #2d8c47;
     transform: translateY(-1px);
 }

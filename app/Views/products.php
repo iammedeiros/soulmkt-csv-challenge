@@ -17,13 +17,13 @@
                 <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
             </div>
             
-            <div class="form-group">
+            <div class="form-group delimiter-options">
                 <label>Delimitador:</label>
                 <label><input type="radio" name="delimiter" value="," checked> Vírgula (,)</label>
                 <label><input type="radio" name="delimiter" value=";"> Ponto e vírgula (;)</label>
             </div>
             
-            <button type="submit">Processar</button>
+            <button class="btn-submit" type="submit">Processar Dados</button>
         </form>
         
         <div id="product-table-container"></div>
