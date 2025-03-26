@@ -29,13 +29,13 @@ class ProductTableRenderer {
             ? `<button class="copy-json-btn" data-product='${productJSON}'>
                   Copiar JSON
                </button>`
-            : '';    
+            : '';
 
         return `
             <tr class="${rowClass}">
                 <td>${product.name}</td>
                 <td>${product.code}</td>
-                <td>${product.price.toFixed( 2 )}</td>
+                <td>${product.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 <td>${actionButton}</td>
             </tr>
         `;
@@ -45,7 +45,7 @@ class ProductTableRenderer {
         try {
             const product = JSON.parse( productData );
             navigator.clipboard.writeText( JSON.stringify( product, null, 2 ) )
-                .then( () => showMessage('Copiado para área de transferência!', 'success' ) )
+                .then( () => alert('Copiado para a área de transferência.'))
                 .catch( err => console.error( 'Erro ao copiar:', err ) );
         } catch ( e ) {
             console.error( 'Erro ao parsear JSON:', e );
@@ -53,27 +53,27 @@ class ProductTableRenderer {
     }
 
     static initCopyButtons() {
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('copy-json-btn')) {
-                const productData = e.target.getAttribute('data-product');
-                ProductTableRenderer.copyToClipboard(productData);
+        document.addEventListener( 'click', ( e ) => {
+            if ( e.target.classList.contains( 'copy-json-btn' ) ) {
+                const productData = e.target.getAttribute( 'data-product' );
+                ProductTableRenderer.copyToClipboard( productData );
             }
-        });
+        } );
     }
 }
 
-const showMessage = function(message, type = 'error') {
-    const messageContainer = document.querySelector('#message-container');
-    
+const showMessage = function ( message, type = 'error' ) {
+    const messageContainer = document.querySelector( '#message-container' );
+
     messageContainer.innerHTML = `
         <div class="status-message ${type}-message">
             ${message}
         </div>
     `;
-    
-    setTimeout(() => {
+
+    setTimeout( () => {
         messageContainer.innerHTML = '';
-    }, 5000);
+    }, 10000 );
 }
 
 
@@ -91,13 +91,13 @@ $( document ).ready( function () {
             contentType: false,
             processData: false,
             success: function ( response ) {
-                console.log(response);
+                console.log( response );
                 $( '#product-table-container' ).html( ProductTableRenderer.render( response ) );
                 ProductTableRenderer.initCopyButtons();
-                showMessage('Arquivo processado com sucesso!', 'success');
+                showMessage( 'Arquivo processado com sucesso!', 'success' );
             },
             error: function ( reject ) {
-                showMessage(JSON.parse(reject.responseText).error, 'error');
+                showMessage( JSON.parse( reject.responseText ).error, 'error' );
             }
         } );
     } );
