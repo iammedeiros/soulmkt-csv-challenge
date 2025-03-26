@@ -36,4 +36,10 @@ class ProductTableRenderer {
             </tr>
         `;
     }
+    
+    static copyToClipboard(productData) {
+        navigator.clipboard.writeText(JSON.stringify(productData, null, 2))
+            .then(() => alert('Copiado para área de transferência!'))
+            .catch(err => console.error('Erro ao copiar:', err));
+    }
 }
