@@ -1,45 +1,59 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Services\CsvProcessor;
 use App\Services\ProductResponseMapper;
 use App\Exceptions\FileUploadException;
 
-class ProductController {
+class ProductController
+{
     private $csvProcessor;
     private $responseMapper;
-    
-    public function __construct(CsvProcessor $csvProcessor, ProductResponseMapper $responseMapper) {
+
+    public function __construct(CsvProcessor $csvProcessor, ProductResponseMapper $responseMapper)
+    {
         $this->csvProcessor = $csvProcessor;
         $this->responseMapper = $responseMapper;
     }
-    
-    private function validateUpload() {
+
+    private function validateUpload(): void
+    {
         if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
-            throw new FileUploadException('Erro no upload do arquivo');
+            throw FileUploadException::uploadError();
         }
-        
-        if ($_FILES['csv_file']['type'] !== 'text/csv') {
-            throw new FileUploadException('Apenas arquivos CSV são permitidos');
+
+        $allowedTypes = ['text/csv', 'application/vnd.ms-excel'];
+        if (!in_array($_FILES['csv_file']['type'], $allowedTypes)) {
+            throw FileUploadException::invalidFileType();
         }
     }
 
-    public function upload() {
+    public function upload() : void
+    {
         try {
             $this->validateUpload();
-            
+
             $delimiter = $_POST['delimiter'] === ';' ? ';' : ',';
             $this->csvProcessor = new CsvProcessor($delimiter);
-            
+
             $products = $this->csvProcessor->csvProcess($_FILES['csv_file']['tmp_name']);
             $response = $this->responseMapper->mapToResponse($products);
-            
+
             header('Content-Type: application/json');
-            return json_encode($response);
-            
+            echo json_encode($response);
         } catch (FileUploadException $e) {
             http_response_code(400);
-            return json_encode(['error' => $e->getMessage()]);
+            echo json_encode([
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'error' => 'Erro interno no servidor',
+                'details' => $e->getMessage()
+            ]);
         }
     }
 }

@@ -65,7 +65,8 @@ class CsvProcessor
 
         $name = trim($data[$columnMap['name']] ?? '');
         $code = trim($data[$columnMap['code']] ?? '');
-        $price = (float)($data[$columnMap['price']] ?? 0);
+        $price = str_replace(['R$', ' '], '', $data[$columnMap['price']]);
+        $price = (float) str_replace(',', '.', $price);
 
         return !empty($name) && !empty($code) ? new Product($name, $code, $price) : null;
     }
