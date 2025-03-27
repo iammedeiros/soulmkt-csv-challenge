@@ -69,7 +69,7 @@ class CsvProcessor
         return count($map) === 3 ? $map : [];
     }
 
-    private function createProduct(array $data, array $columnMap): ? Product
+    private function createProduct(array $data, array $columnMap): ?Product
     {
         if (empty($columnMap) || max($columnMap) >= count($data)) {
             return null;
@@ -77,7 +77,7 @@ class CsvProcessor
 
         $name = trim($data[$columnMap['name']] ?? '');
         $code = trim($data[$columnMap['code']] ?? '');
-        $price = str_replace(['R$', ' '], '', $data[$columnMap['price']]);
+        $price = trim(str_replace(['R$', ' '], '', $data[$columnMap['price']]));
         $price = (float) str_replace(',', '.', $price);
 
         if (empty($name) || empty($code) || $price === 0.0) {
