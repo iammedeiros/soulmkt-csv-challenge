@@ -27,7 +27,6 @@ $( document ).ready( function () {
             contentType: false,
             processData: false,
             success: function ( response ) {
-                console.log( response );
                 $( '#product-table-container' ).html( ProductTableRenderer.render( response ) );
                 ProductTableRenderer.initCopyButtons();
                 showMessage( 'Arquivo processado com sucesso!', 'success' );
