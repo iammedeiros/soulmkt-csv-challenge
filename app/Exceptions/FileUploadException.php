@@ -15,7 +15,7 @@ class FileUploadException extends Exception
     private const ERROR_MESSAGES = [
         self::INVALID_FILE_TYPE => 'Tipo de arquivo inválido. Apenas arquivos CSV são permitidos.',
         self::UPLOAD_ERROR => 'Erro durante o upload do arquivo. Por favor, tente novamente.',
-        self::EMPTY_FILE => 'Não foi possível realizar o processamento. O arquivo CSV está vazio.',
+        self::EMPTY_FILE => 'Não foi possível realizar o processamento. O arquivo CSV está vazio ou os dados são inválidos.',
         self::COLUMNS_NOT_FOUND => 'As colunas obrigatórias (nome, codigo, preco) não foram encontradas no arquivo CSV ou o delimitador foi informado incorretamente.',
         self::FILE_OPEN_ERROR => 'Não foi possível abrir o arquivo para leitura.',
         self::FILE_NOT_FOUND => 'O arquivo especificado não foi encontrado no servidor.'
