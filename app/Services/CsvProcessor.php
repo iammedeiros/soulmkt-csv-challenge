@@ -71,7 +71,7 @@ class CsvProcessor
 
     private function createProduct(array $data, array $columnMap): ? Product
     {
-        if (empty($columnMap) || count($data) < max($columnMap)) {
+        if (empty($columnMap) || max($columnMap) >= count($data)) {
             return null;
         }
 
