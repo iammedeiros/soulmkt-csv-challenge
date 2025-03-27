@@ -80,6 +80,10 @@ class CsvProcessor
         $price = str_replace(['R$', ' '], '', $data[$columnMap['price']]);
         $price = (float) str_replace(',', '.', $price);
 
+        if (empty($name) || empty($code) || $price === 0.0) {
+            return null;
+        }
+
         return !empty($name) && !empty($code) ? new Product($name, $code, $price) : null;
     }
 }
