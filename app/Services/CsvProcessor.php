@@ -84,6 +84,6 @@ class CsvProcessor
             return null;
         }
 
-        return !empty($name) && !empty($code) ? new Product($name, $code, $price) : null;
+        return new Product($name, $code, $price);
     }
 }
